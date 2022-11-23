@@ -8,6 +8,7 @@ import {
 import { mockApiRestClient } from 'app/protocols/api-rest-client/mock'
 import { HttpStatusCodeEnum } from 'app/protocols/http/http-status-code-enum'
 import { CredentialsError } from 'domain/errors/credencials-error'
+import { UnexpectedError } from 'domain/errors/unexpected-error'
 import { User } from 'domain/models/user'
 import { UserAuthenticationParams } from 'domain/use-cases/user-authentication'
 import { RemoteUserAuthentication } from '.'
@@ -95,5 +96,22 @@ describe('RemoteUserAuthentication', () => {
     const modelData = sut.auth(authParams)
 
     await expect(modelData).rejects.toThrow(CredentialsError)
+  })
+
+  it('should throw unexpected error if remote fails', async () => {
+    const { sut, apiRestClient, response } = makeSut()
+
+    response.statusCode = faker.internet.httpStatusCode({
+      types: ['serverError'],
+    })
+    apiRestClient.request.mockResolvedValueOnce(response)
+
+    const authParams: UserAuthenticationParams = {
+      identifier: faker.internet.email(),
+      password: faker.internet.password(),
+    }
+    const modelData = sut.auth(authParams)
+
+    await expect(modelData).rejects.toThrow(UnexpectedError)
   })
 })
