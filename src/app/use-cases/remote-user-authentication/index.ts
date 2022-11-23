@@ -1,5 +1,5 @@
 import { RemoteUser } from 'app/models/remote-user'
-import { ApiRestClient } from 'app/protocols/api-rest-client'
+import { ApiRestClient } from 'app/protocols/http/api-rest-client'
 import { HttpStatusCodeEnum } from 'app/protocols/http/http-status-code-enum'
 import { CredentialsError } from 'domain/errors/credencials-error'
 import { UnexpectedError } from 'domain/errors/unexpected-error'

@@ -4,8 +4,8 @@ import { mockRemoteUser } from 'app/models/remote-user/mock'
 import {
   ApiRestClientParams,
   ApiRestClientResponse,
-} from 'app/protocols/api-rest-client'
-import { mockApiRestClient } from 'app/protocols/api-rest-client/mock'
+} from 'app/protocols/http/api-rest-client'
+import { mockApiRestClient } from 'app/protocols/http/api-rest-client/mock'
 import { HttpStatusCodeEnum } from 'app/protocols/http/http-status-code-enum'
 import { CredentialsError } from 'domain/errors/credencials-error'
 import { UnexpectedError } from 'domain/errors/unexpected-error'
