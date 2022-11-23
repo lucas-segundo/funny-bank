@@ -6,6 +6,8 @@ import {
   ApiRestClientResponse,
 } from 'app/protocols/api-rest-client'
 import { mockApiRestClient } from 'app/protocols/api-rest-client/mock'
+import { HttpStatusCodeEnum } from 'app/protocols/http/http-status-code-enum'
+import { InvalidCredentialsError } from 'domain/errors/invalid-credencials-error'
 import { User } from 'domain/models/user'
 import { UserAuthenticationParams } from 'domain/use-cases/user-authentication'
 import { RemoteUserAuthentication } from '.'
@@ -16,7 +18,7 @@ const makeSut = () => {
   const sut = new RemoteUserAuthentication(apiRestClient)
   const response: ApiRestClientResponse<RemoteUser> = {
     data: mockRemoteUser(),
-    statusCode: faker.internet.httpStatusCode(),
+    statusCode: HttpStatusCodeEnum.OK,
   }
 
   return {
@@ -63,5 +65,20 @@ describe('RemoteUserAuthentication', () => {
     }
 
     expect(modelData).toEqual(userModelFromRemote)
+  })
+
+  it('should throw error credencial error if remote return bad request', async () => {
+    const { sut, apiRestClient, response } = makeSut()
+
+    response.statusCode = HttpStatusCodeEnum.BAD_REQUEST
+    apiRestClient.request.mockResolvedValueOnce(response)
+
+    const authParams: UserAuthenticationParams = {
+      identifier: faker.internet.email(),
+      password: faker.internet.password(),
+    }
+    const modelData = sut.auth(authParams)
+
+    await expect(modelData).rejects.toThrow(InvalidCredentialsError)
   })
 })
