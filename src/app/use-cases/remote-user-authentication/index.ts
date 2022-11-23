@@ -11,12 +11,21 @@ export class RemoteUserAuthentication implements UserAuthentication {
   constructor(private readonly apiRestClient: ApiRestClient) {}
 
   async auth(params: UserAuthenticationParams): Promise<User> {
-    await this.apiRestClient.request<
+    const response = await this.apiRestClient.request<
       RemoteUserAuthenticationParams,
       RemoteUser
     >({
       method: 'post',
       body: params,
     })
+
+    return this.adaptToModel(response.data)
+  }
+
+  adaptToModel(data: RemoteUser): User {
+    return {
+      id: data.user.id.toString(),
+      username: data.user.username,
+    }
   }
 }
