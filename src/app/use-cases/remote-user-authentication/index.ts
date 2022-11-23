@@ -37,6 +37,7 @@ export class RemoteUserAuthentication implements UserAuthentication {
     return {
       id: data.user.id.toString(),
       username: data.user.username,
+      accessToken: data.jwt,
     }
   }
 }

@@ -63,6 +63,7 @@ describe('RemoteUserAuthentication', () => {
     const userModelFromRemote: User = {
       id: response.data.user.id.toString(),
       username: response.data.user.username,
+      accessToken: response.data.jwt,
     }
 
     expect(modelData).toEqual(userModelFromRemote)
