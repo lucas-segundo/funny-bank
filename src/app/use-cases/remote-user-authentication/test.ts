@@ -81,4 +81,19 @@ describe('RemoteUserAuthentication', () => {
 
     await expect(modelData).rejects.toThrow(CredentialsError)
   })
+
+  it('should throw credencial error if remote return unauthorized', async () => {
+    const { sut, apiRestClient, response } = makeSut()
+
+    response.statusCode = HttpStatusCodeEnum.UNAUTHORIZED
+    apiRestClient.request.mockResolvedValueOnce(response)
+
+    const authParams: UserAuthenticationParams = {
+      identifier: faker.internet.email(),
+      password: faker.internet.password(),
+    }
+    const modelData = sut.auth(authParams)
+
+    await expect(modelData).rejects.toThrow(CredentialsError)
+  })
 })
