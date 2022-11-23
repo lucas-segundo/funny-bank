@@ -1,6 +1,7 @@
 export type ApiRestClientParams<Body> = {
   method: 'get' | 'post'
-  body: Body
+  headers?: Record<string, unknown>
+  body?: Body
 }
 
 export type ApiRestClientResponse<Data> = {
