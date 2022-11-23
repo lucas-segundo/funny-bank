@@ -25,6 +25,7 @@ export class RemoteUserAuthentication implements UserAuthentication {
       case HttpStatusCodeEnum.OK:
         return this.adaptToModel(response.data)
       case HttpStatusCodeEnum.BAD_REQUEST:
+      case HttpStatusCodeEnum.UNAUTHORIZED:
         throw new CredentialsError()
     }
   }
