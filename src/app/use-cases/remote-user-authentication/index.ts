@@ -2,6 +2,7 @@ import { RemoteUser } from 'app/models/remote-user'
 import { ApiRestClient } from 'app/protocols/api-rest-client'
 import { HttpStatusCodeEnum } from 'app/protocols/http/http-status-code-enum'
 import { CredentialsError } from 'domain/errors/credencials-error'
+import { UnexpectedError } from 'domain/errors/unexpected-error'
 import { User } from 'domain/models/user'
 import {
   UserAuthentication,
@@ -27,6 +28,8 @@ export class RemoteUserAuthentication implements UserAuthentication {
       case HttpStatusCodeEnum.BAD_REQUEST:
       case HttpStatusCodeEnum.UNAUTHORIZED:
         throw new CredentialsError()
+      default:
+        throw new UnexpectedError()
     }
   }
 
