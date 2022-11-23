@@ -1,5 +1,7 @@
 import { RemoteUser } from 'app/models/remote-user'
 import { ApiRestClient } from 'app/protocols/api-rest-client'
+import { HttpStatusCodeEnum } from 'app/protocols/http/http-status-code-enum'
+import { InvalidCredentialsError } from 'domain/errors/invalid-credencials-error'
 import { User } from 'domain/models/user'
 import {
   UserAuthentication,
@@ -19,7 +21,12 @@ export class RemoteUserAuthentication implements UserAuthentication {
       body: params,
     })
 
-    return this.adaptToModel(response.data)
+    switch (response.statusCode) {
+      case HttpStatusCodeEnum.OK:
+        return this.adaptToModel(response.data)
+      case HttpStatusCodeEnum.BAD_REQUEST:
+        throw new InvalidCredentialsError()
+    }
   }
 
   adaptToModel(data: RemoteUser): User {
