@@ -1,7 +1,7 @@
 import { RemoteUser } from 'app/models/remote-user'
 import { ApiRestClient } from 'app/protocols/api-rest-client'
 import { HttpStatusCodeEnum } from 'app/protocols/http/http-status-code-enum'
-import { InvalidCredentialsError } from 'domain/errors/invalid-credencials-error'
+import { CredentialsError } from 'domain/errors/credencials-error'
 import { User } from 'domain/models/user'
 import {
   UserAuthentication,
@@ -25,7 +25,7 @@ export class RemoteUserAuthentication implements UserAuthentication {
       case HttpStatusCodeEnum.OK:
         return this.adaptToModel(response.data)
       case HttpStatusCodeEnum.BAD_REQUEST:
-        throw new InvalidCredentialsError()
+        throw new CredentialsError()
     }
   }
 
