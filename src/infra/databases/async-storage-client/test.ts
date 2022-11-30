@@ -34,4 +34,14 @@ describe('AsyncStorageClient', () => {
 
     expect(result).toBeUndefined()
   })
+
+  it('should throw error if something whong happens', async () => {
+    const { sut, asyncStorageSetItem } = makeSut()
+    asyncStorageSetItem.mockRejectedValueOnce(Error)
+
+    const setParams = mockDatabaseSetterClientParams()
+    const result = sut.set(setParams)
+
+    expect(result).rejects.toThrow(Error)
+  })
 })
