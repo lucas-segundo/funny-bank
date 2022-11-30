@@ -16,4 +16,13 @@ describe('AsyncStorageClient', () => {
 
     expect(asyncStorageSetItem).toBeCalledWith(setParams.into, dataStringified)
   })
+
+  it('should return nothing when setItem is called', async () => {
+    const sut = new AsyncStorageClient()
+
+    const setParams = mockDatabaseSetterClientParams()
+    const result = await sut.set(setParams)
+
+    expect(result).toBeUndefined()
+  })
 })
