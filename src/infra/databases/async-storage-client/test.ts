@@ -4,10 +4,19 @@ import { mockDatabaseSetterClientParams } from 'app/protocols/database/database-
 
 jest.mock('@react-native-async-storage/async-storage')
 
+const makeSut = () => {
+  const asyncStorageSetItem = jest.spyOn(AsyncStorage, 'setItem')
+  const sut = new AsyncStorageClient()
+
+  return {
+    sut,
+    asyncStorageSetItem,
+  }
+}
+
 describe('AsyncStorageClient', () => {
   it('should call setItem with right params', async () => {
-    const asyncStorageSetItem = jest.spyOn(AsyncStorage, 'setItem')
-    const sut = new AsyncStorageClient()
+    const { asyncStorageSetItem, sut } = makeSut()
 
     const setParams = mockDatabaseSetterClientParams()
     await sut.set(setParams)
@@ -17,8 +26,8 @@ describe('AsyncStorageClient', () => {
     expect(asyncStorageSetItem).toBeCalledWith(setParams.into, dataStringified)
   })
 
-  it('should return nothing when setItem is called', async () => {
-    const sut = new AsyncStorageClient()
+  it('should return nothing when set is called', async () => {
+    const { sut } = makeSut()
 
     const setParams = mockDatabaseSetterClientParams()
     const result = await sut.set(setParams)
