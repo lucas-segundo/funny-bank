@@ -6,8 +6,10 @@ export class LocalSessionGetter implements SessionGetter {
   constructor(private readonly databaseGetterClient: DatabaseGetterClient) {}
 
   async get(): Promise<User> {
-    await this.databaseGetterClient.get<User>({
+    const data = await this.databaseGetterClient.get<User>({
       from: 'userSession',
     })
+
+    return data
   }
 }
