@@ -12,7 +12,9 @@ export class AsyncStorageClient
   implements DatabaseSetterClient, DatabaseGetterClient
 {
   async get<Data>({ from }: DatabaseGetterClientParams): Promise<Data> {
-    await AsyncStorage.getItem(from)
+    const stringData = await AsyncStorage.getItem(from)
+
+    return JSON.parse(stringData)
   }
 
   async set<Data>({
