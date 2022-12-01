@@ -74,6 +74,18 @@ describe('AsyncStorageClient', () => {
     expect(data).toEqual(user)
   })
 
+  it('should .get return nothing if has no data', async () => {
+    const { sut, asyncStorageGetItem } = makeSut()
+    asyncStorageGetItem.mockResolvedValueOnce(null)
+
+    const getParams = mockDatabaseGetterClientParams()
+    const data = await sut.get({
+      from: getParams.from,
+    })
+
+    expect(data).toBeUndefined()
+  })
+
   it('should throw error if something whong happens in getItem', async () => {
     const { sut, asyncStorageGetItem } = makeSut()
     asyncStorageGetItem.mockRejectedValueOnce(Error)
