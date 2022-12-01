@@ -4,26 +4,33 @@ import { UnexpectedError } from 'domain/errors/unexpected-error'
 import { mockUser } from 'domain/models/user/mock'
 import { LocalSessionGetter } from '.'
 
+const makeSut = () => {
+  const databaseGetterClient = mockDatabaseGetterClient()
+  const sut = new LocalSessionGetter(databaseGetterClient)
+
+  return {
+    databaseGetterClient,
+    sut,
+  }
+}
+
 describe('LocalSessionGetter', () => {
   it('should call client with right params', async () => {
-    const databaseGetterlient = mockDatabaseGetterClient()
-    const sut = new LocalSessionGetter(databaseGetterlient)
+    const { sut, databaseGetterClient } = makeSut()
 
     await sut.get()
 
     const getParams: DatabaseGetterClientParams = {
       from: 'userSession',
     }
-    expect(databaseGetterlient.get).toBeCalledWith(getParams)
+    expect(databaseGetterClient.get).toBeCalledWith(getParams)
   })
 
   it('should return user data', async () => {
-    const databaseGetterlient = mockDatabaseGetterClient()
+    const { sut, databaseGetterClient } = makeSut()
 
     const user = mockUser()
-    databaseGetterlient.get.mockResolvedValueOnce(user)
-
-    const sut = new LocalSessionGetter(databaseGetterlient)
+    databaseGetterClient.get.mockResolvedValueOnce(user)
 
     const data = await sut.get()
 
@@ -31,10 +38,9 @@ describe('LocalSessionGetter', () => {
   })
 
   it('should throw unexpected error when something wrong happens', async () => {
-    const databaseGetterClient = mockDatabaseGetterClient()
+    const { sut, databaseGetterClient } = makeSut()
     databaseGetterClient.get.mockRejectedValueOnce(Error)
 
-    const sut = new LocalSessionGetter(databaseGetterClient)
     const promise = sut.get()
 
     await expect(promise).rejects.toThrowError(UnexpectedError)
