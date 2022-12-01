@@ -73,4 +73,14 @@ describe('AsyncStorageClient', () => {
 
     expect(data).toEqual(user)
   })
+
+  it('should throw error if something whong happens in getItem', async () => {
+    const { sut, asyncStorageGetItem } = makeSut()
+    asyncStorageGetItem.mockRejectedValueOnce(Error)
+
+    const getParams = mockDatabaseGetterClientParams()
+    const result = sut.get(getParams)
+
+    expect(result).rejects.toThrow(Error)
+  })
 })
