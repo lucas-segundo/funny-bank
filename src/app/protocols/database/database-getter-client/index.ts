@@ -3,5 +3,5 @@ export type DatabaseGetterClientParams = {
 }
 
 export interface DatabaseGetterClient {
-  get<Data>(params: DatabaseGetterClientParams): Promise<Data>
+  get<Data>(params: DatabaseGetterClientParams): Promise<Data | undefined>
 }
