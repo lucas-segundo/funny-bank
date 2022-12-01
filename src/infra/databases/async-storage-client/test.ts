@@ -1,8 +1,8 @@
 import { AsyncStorageClient } from '.'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { mockDatabaseSetterClientParams } from 'app/protocols/database/database-setter-client/mock'
-import { faker } from '@faker-js/faker'
 import { mockDatabaseGetterClientParams } from 'app/protocols/database/database-getter-client/mock'
+import { mockUser } from 'domain/models/user/mock'
 
 jest.mock('@react-native-async-storage/async-storage')
 
@@ -58,5 +58,19 @@ describe('AsyncStorageClient', () => {
     })
 
     expect(asyncStorageGetItem).toBeCalledWith(getParams.from)
+  })
+
+  it('should .get return data', async () => {
+    const { sut, asyncStorageGetItem } = makeSut()
+
+    const user = mockUser()
+    asyncStorageGetItem.mockResolvedValueOnce(JSON.stringify(user))
+
+    const getParams = mockDatabaseGetterClientParams()
+    const data = await sut.get({
+      from: getParams.from,
+    })
+
+    expect(data).toEqual(user)
   })
 })
