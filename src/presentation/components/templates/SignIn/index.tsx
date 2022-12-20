@@ -1,22 +1,32 @@
 import React, { useState } from 'react'
 import { Box, Button, Center, Input, Text, VStack } from 'native-base'
 import { UserAuthentication } from 'domain/use-cases/user-authentication'
+import { UnexpectedError } from 'domain/errors/unexpected-error'
 
 export type SignInProps = {
   userAuthentication: UserAuthentication
 }
 
 const SignIn = ({ userAuthentication }: SignInProps) => {
+  const [error, setError] = useState('')
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   })
 
   const handleSignIn = async () => {
-    await userAuthentication.auth({
-      identifier: formData.username,
-      password: formData.password,
-    })
+    try {
+      await userAuthentication.auth({
+        identifier: formData.username,
+        password: formData.password,
+      })
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError(new UnexpectedError().message)
+      }
+    }
   }
 
   return (
@@ -53,10 +63,11 @@ const SignIn = ({ userAuthentication }: SignInProps) => {
           >
             Sign In
           </Button>
-          <Text color="red.500" fontWeight="bold" fontSize="md">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. A fugiat
-            harum totam omnis!
-          </Text>
+          {error && (
+            <Text color="red.500" fontWeight="bold" fontSize="md">
+              {error}
+            </Text>
+          )}
         </VStack>
       </Center>
     </Box>
