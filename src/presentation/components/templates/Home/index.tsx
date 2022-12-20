@@ -20,7 +20,10 @@ const Home = () => {
         This is a Box
       </Box>
       <Button onPress={() => navigation.navigate('Details')}>
-        Go to details
+        Go to Details
+      </Button>
+      <Button onPress={() => navigation.navigate('SignIn')}>
+        Go to SignIn
       </Button>
     </Box>
   )
