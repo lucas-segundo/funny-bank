@@ -1,5 +1,9 @@
 import { faker } from '@faker-js/faker'
 import { fireEvent, screen } from '@testing-library/react-native'
+import waitForExpect from 'wait-for-expect'
+
+import { mockUser } from 'domain/models/user/mock'
+import { mockSessionSetter } from 'domain/use-cases/session-setter/mock'
 import { UserAuthenticationParams } from 'domain/use-cases/user-authentication'
 import { mockUserAuthentication } from 'domain/use-cases/user-authentication/mock'
 import { renderWithProviders } from 'presentation/helpers/render-with-providers'
@@ -9,10 +13,17 @@ jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
 
 const makeSut = () => {
   const userAuthentication = mockUserAuthentication()
-  renderWithProviders(<SignIn userAuthentication={userAuthentication} />)
+  const sessionSetter = mockSessionSetter()
+  renderWithProviders(
+    <SignIn
+      userAuthentication={userAuthentication}
+      sessionSetter={sessionSetter}
+    />
+  )
 
   return {
     userAuthentication,
+    sessionSetter,
   }
 }
 
@@ -60,5 +71,26 @@ describe('SignIn', () => {
     fireEvent.press(screen.getByText('Sign In'))
 
     expect(await screen.findByText(errorMessage)).toBeTruthy()
+  })
+
+  it('should call session setter after authentication with right values', async () => {
+    const { userAuthentication, sessionSetter } = makeSut()
+    const user = mockUser()
+    userAuthentication.auth.mockResolvedValue(user)
+
+    fireEvent.changeText(
+      screen.getByPlaceholderText('Username'),
+      faker.internet.userName()
+    )
+    fireEvent.changeText(
+      screen.getByPlaceholderText('Password'),
+      faker.internet.password()
+    )
+
+    fireEvent.press(screen.getByText('Sign In'))
+
+    await waitForExpect(() => {
+      expect(sessionSetter.set).toBeCalledWith({ user })
+    })
   })
 })
