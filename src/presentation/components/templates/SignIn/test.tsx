@@ -1,11 +1,19 @@
-import { screen } from '@testing-library/react-native'
+import { faker } from '@faker-js/faker'
+import { fireEvent, screen } from '@testing-library/react-native'
+import { UserAuthenticationParams } from 'domain/use-cases/user-authentication'
+import { mockUserAuthentication } from 'domain/use-cases/user-authentication/mock'
 import { renderWithProviders } from 'presentation/helpers/render-with-providers'
 import SignIn from '.'
 
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
 
 const makeSut = () => {
-  renderWithProviders(<SignIn />)
+  const userAuthentication = mockUserAuthentication()
+  renderWithProviders(<SignIn userAuthentication={userAuthentication} />)
+
+  return {
+    userAuthentication,
+  }
 }
 
 describe('SignIn', () => {
@@ -15,5 +23,23 @@ describe('SignIn', () => {
     const button = screen.getByText('Sign In')
 
     expect(button).toBeTruthy()
+  })
+
+  it('should call user authentication with right params', () => {
+    const { userAuthentication } = makeSut()
+    const username = faker.internet.userName()
+    fireEvent.changeText(screen.getByPlaceholderText('Username'), username)
+
+    const password = faker.internet.password()
+    fireEvent.changeText(screen.getByPlaceholderText('Password'), password)
+
+    fireEvent.press(screen.getByText('Sign In'))
+
+    const params: UserAuthenticationParams = {
+      identifier: username,
+      password,
+    }
+
+    expect(userAuthentication.auth).toBeCalledWith(params)
   })
 })
