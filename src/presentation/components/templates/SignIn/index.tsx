@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 import { Box, Button, Center, Input, Text, VStack } from 'native-base'
 import { UserAuthentication } from 'domain/use-cases/user-authentication'
 import { UnexpectedError } from 'domain/errors/unexpected-error'
+import { SessionSetter } from 'domain/use-cases/session-setter'
 
 export type SignInProps = {
   userAuthentication: UserAuthentication
+  sessionSetter: SessionSetter
 }
 
-const SignIn = ({ userAuthentication }: SignInProps) => {
+const SignIn = ({ userAuthentication, sessionSetter }: SignInProps) => {
   const [error, setError] = useState('')
   const [formData, setFormData] = useState({
     username: '',
@@ -16,10 +18,12 @@ const SignIn = ({ userAuthentication }: SignInProps) => {
 
   const handleSignIn = async () => {
     try {
-      await userAuthentication.auth({
+      const user = await userAuthentication.auth({
         identifier: formData.username,
         password: formData.password,
       })
+
+      await sessionSetter.set({ user })
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message)
