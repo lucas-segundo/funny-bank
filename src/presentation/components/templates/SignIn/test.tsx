@@ -42,4 +42,23 @@ describe('SignIn', () => {
 
     expect(userAuthentication.auth).toBeCalledWith(params)
   })
+
+  it('should show user authentication error', async () => {
+    const { userAuthentication } = makeSut()
+    const errorMessage = faker.random.words()
+    userAuthentication.auth.mockRejectedValue(new Error(errorMessage))
+
+    fireEvent.changeText(
+      screen.getByPlaceholderText('Username'),
+      faker.internet.userName()
+    )
+    fireEvent.changeText(
+      screen.getByPlaceholderText('Password'),
+      faker.internet.password()
+    )
+
+    fireEvent.press(screen.getByText('Sign In'))
+
+    expect(await screen.findByText(errorMessage)).toBeTruthy()
+  })
 })
