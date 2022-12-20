@@ -1,7 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Button, Center, Input, Text, VStack } from 'native-base'
+import { UserAuthentication } from 'domain/use-cases/user-authentication'
 
-const SignIn = () => {
+export type SignInProps = {
+  userAuthentication: UserAuthentication
+}
+
+const SignIn = ({ userAuthentication }: SignInProps) => {
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+  })
+
+  const handleSignIn = async () => {
+    await userAuthentication.auth({
+      identifier: formData.username,
+      password: formData.password,
+    })
+  }
+
   return (
     <Box safeArea backgroundColor="primary.600">
       <Center height="full">
@@ -12,9 +29,23 @@ const SignIn = () => {
           backgroundColor="muted.100"
           padding="20px"
         >
-          <Input placeholder="Username" fontSize="lg" />
-          <Input placeholder="Password" fontSize="lg" type="password" />
+          <Input
+            placeholder="Username"
+            fontSize="lg"
+            onChangeText={(text) =>
+              setFormData((prev) => ({ ...prev, username: text }))
+            }
+          />
+          <Input
+            placeholder="Password"
+            fontSize="lg"
+            type="password"
+            onChangeText={(text) =>
+              setFormData((prev) => ({ ...prev, password: text }))
+            }
+          />
           <Button
+            onPress={() => handleSignIn()}
             _text={{
               fontWeight: 'bold',
               fontSize: 'md',
