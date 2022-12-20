@@ -7,10 +7,12 @@ import {
 } from '@react-navigation/native-stack'
 import Home from './presentation/components/templates/Home'
 import Details from './presentation/components/templates/Details'
+import SignIn from 'presentation/components/templates/SignIn'
 
 export type RootStackParamList = {
   Home: undefined
   Details: undefined
+  SignIn: undefined
 }
 
 export type StackNavigationProps = NativeStackNavigationProp<RootStackParamList>
@@ -24,6 +26,13 @@ export default function App() {
         <Stack.Navigator>
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Details" component={Details} />
+          <Stack.Screen
+            name="SignIn"
+            component={SignIn}
+            options={{
+              headerShown: false,
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
