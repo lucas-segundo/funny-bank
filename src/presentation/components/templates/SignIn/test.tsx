@@ -93,4 +93,24 @@ describe('SignIn', () => {
       expect(sessionSetter.set).toBeCalledWith({ user })
     })
   })
+
+  it('should show session setter error', async () => {
+    const { sessionSetter } = makeSut()
+    const errorMessage = faker.random.words()
+
+    sessionSetter.set.mockRejectedValueOnce(new Error(errorMessage))
+
+    fireEvent.changeText(
+      screen.getByPlaceholderText('Username'),
+      faker.internet.userName()
+    )
+    fireEvent.changeText(
+      screen.getByPlaceholderText('Password'),
+      faker.internet.password()
+    )
+
+    fireEvent.press(screen.getByText('Sign In'))
+
+    expect(await screen.findByText(errorMessage)).toBeTruthy()
+  })
 })
