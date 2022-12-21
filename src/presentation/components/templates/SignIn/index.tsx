@@ -18,8 +18,10 @@ const SignIn = ({ userAuthentication, sessionSetter }: SignInProps) => {
     username: '',
     password: '',
   })
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSignIn = async () => {
+    setIsLoading(true)
     try {
       const user = await userAuthentication.auth({
         identifier: formData.username,
@@ -34,6 +36,8 @@ const SignIn = ({ userAuthentication, sessionSetter }: SignInProps) => {
       } else {
         setError(new UnexpectedError().message)
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -63,6 +67,8 @@ const SignIn = ({ userAuthentication, sessionSetter }: SignInProps) => {
             }
           />
           <Button
+            isLoadingText="Loading"
+            isLoading={isLoading}
             onPress={() => handleSignIn()}
             _text={{
               fontWeight: 'bold',
