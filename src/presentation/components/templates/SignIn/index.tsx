@@ -3,6 +3,8 @@ import { Box, Button, Center, Input, Text, VStack } from 'native-base'
 import { UserAuthentication } from 'domain/use-cases/user-authentication'
 import { UnexpectedError } from 'domain/errors/unexpected-error'
 import { SessionSetter } from 'domain/use-cases/session-setter'
+import { useNavigation } from '@react-navigation/native'
+import { StackNavigationProps } from 'App'
 
 export type SignInProps = {
   userAuthentication: UserAuthentication
@@ -10,6 +12,7 @@ export type SignInProps = {
 }
 
 const SignIn = ({ userAuthentication, sessionSetter }: SignInProps) => {
+  const navigation = useNavigation<StackNavigationProps>()
   const [error, setError] = useState('')
   const [formData, setFormData] = useState({
     username: '',
@@ -24,6 +27,7 @@ const SignIn = ({ userAuthentication, sessionSetter }: SignInProps) => {
       })
 
       await sessionSetter.set({ user })
+      navigation.navigate('Home')
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message)
