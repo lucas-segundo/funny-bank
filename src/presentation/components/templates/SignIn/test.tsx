@@ -111,4 +111,20 @@ describe('SignIn', () => {
 
     expect(await screen.findByText(errorMessage)).toBeTruthy()
   })
+
+  it('should being loading after form submit', async () => {
+    makeSut()
+
+    fireEvent.changeText(
+      screen.getByPlaceholderText('Username'),
+      faker.internet.userName()
+    )
+    fireEvent.changeText(
+      screen.getByPlaceholderText('Password'),
+      faker.internet.password()
+    )
+    fireEvent.press(screen.getByText('Sign In'))
+
+    expect(await screen.findByText(/loading/i)).toBeTruthy()
+  })
 })
