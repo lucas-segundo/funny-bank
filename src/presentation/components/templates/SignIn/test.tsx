@@ -9,8 +9,6 @@ import { mockUserAuthentication } from 'domain/use-cases/user-authentication/moc
 import { renderWithProviders } from 'presentation/helpers/render-with-providers'
 import SignIn from '.'
 
-jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
-
 const makeSut = () => {
   const userAuthentication = mockUserAuthentication()
   const sessionSetter = mockSessionSetter()
