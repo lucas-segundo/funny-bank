@@ -26,6 +26,7 @@ const SignIn = ({ userAuthentication, sessionSetter }: SignInProps) => {
       await sessionSetter.set({ user })
     } catch (error) {
       if (error instanceof Error) {
+        console.log(error.message)
         setError(error.message)
       } else {
         setError(new UnexpectedError().message)
