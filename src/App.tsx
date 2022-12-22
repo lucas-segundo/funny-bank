@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/native-stack'
 import Home from './presentation/components/templates/Home'
 import Details from './presentation/components/templates/Details'
-import SignIn from 'presentation/components/templates/SignIn'
+import SignInScreen from 'main/screens/sign-in'
 
 export type RootStackParamList = {
   Home: undefined
@@ -28,7 +28,7 @@ export default function App() {
           <Stack.Screen name="Details" component={Details} />
           <Stack.Screen
             name="SignIn"
-            component={SignIn}
+            component={SignInScreen}
             options={{
               headerShown: false,
             }}
