@@ -1,6 +1,6 @@
 export class UserSessionNotFoundError extends Error {
   constructor() {
-    super('Sessão do usuário não encontrada.')
+    super('User session not found.')
     this.name = 'UserSessionNotFoundError'
   }
 }
