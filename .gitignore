@@ -57,3 +57,5 @@ dist/
 # Test
 /coverage
 e2e/artifacts
+
+.react
